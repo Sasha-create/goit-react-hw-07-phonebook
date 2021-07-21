@@ -1,70 +1,98 @@
-import React from 'react'; //при закоментированом варианте нужно сюда дописать { Component }
-import style from '../ContactForm/ContactForm.module.css';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { addContact } from '../../redux/phoneBook/phonebook-operations';
+import { addContact } from '../../redux/phonebook/phonebook-operations';
+import { v4 as uuidv4 } from 'uuid';
+import PropTypes from 'prop-types';
+import styles from './ContactForm.module.css';
 
-const ContactForm = ({
-  onSetName,
-  onAddContact,
-  name,
-  number,
-  addContact,
-  reset,
-}) => {
-  const handleAddContact = e => {
+class ContactForm extends Component {
+  static defaultProps = {
+    name: '',
+    number: '',
+  };
+
+  static propTypes = {
+    name: PropTypes.string,
+    number: PropTypes.string,
+  };
+
+  state = {
+    name: '',
+    number: '',
+  };
+
+  nameInputId = uuidv4();
+  numberInputId = uuidv4();
+
+  handleChange = e => {
+    const { name, value } = e.currentTarget;
+    this.setState({ [name]: value });
+  };
+
+  handleSubmit = e => {
     e.preventDefault();
-    const contact = {
-      name,
-      number,
-    };
-    addContact(contact);
-    reset();
+    const { name, number } = this.state;
+    if (name !== '' && number !== '') {
+      this.props.onSubmit(name, number);
+      this.reset();
+      return;
+    }
+    alert('Please fill empty fields');
   };
 
-  return (
-    <form className={style.form} onSubmit={handleAddContact}>
-      <label style={{ marginBottom: '10px' }}>
-        Name
-        <input
-          value={name}
-          type="text"
-          name="name"
-          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-          title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
-          placeholder="Enter contact name"
-          required
-          onInput={onSetName}
-          // onChange={options.handleChange}
-        />
-      </label>
-      <label className={style.labelPhone}>
-        Phone
-        <input
-          value={number}
-          type="tel"
-          name="number"
-          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-          title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
-          placeholder="Enter contact phone"
-          required
-          onInput={onSetName}
-          // onChange={options.handleChange}
-        />
-      </label>
-      <button type="submit" className={style.button}>
-        Отправить
-      </button>
-    </form>
-  );
-};
-
-const mapStateToProps = state => state;
-
-const mapDispatchToProps = dispatch => {
-  return {
-    addContact: contact => dispatch(addContact(contact)),
+  reset = () => {
+    this.setState({ name: '', number: '' });
   };
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
+  render() {
+    const { name, number } = this.state;
 
+    return (
+      <>
+        <form onSubmit={this.handleSubmit} className={styles.contacts_form}>
+          <div>
+            <label htmlFor={this.nameInputId} className={styles.label}>
+              Name
+              <input
+                type="text"
+                value={name}
+                name="name"
+                pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+                title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
+                required
+                onChange={this.handleChange}
+                id={this.nameInputId}
+                className={styles.input}
+              />
+            </label>
+          </div>
+          <div>
+            <label htmlFor={this.numberInputId} className={styles.label}>
+              Number
+              <input
+                type="tel"
+                value={number}
+                name="number"
+                pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+                title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
+                required
+                onChange={this.handleChange}
+                id={this.numberInputId}
+                className={styles.input}
+              />
+            </label>
+          </div>
+
+          <button type="submit" className={styles.form_button}>
+            Add contact
+          </button>
+        </form>
+      </>
+    );
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  onSubmit: (name, number) => dispatch(addContact(name, number)),
+});
+export default connect(null, mapDispatchToProps)(ContactForm);

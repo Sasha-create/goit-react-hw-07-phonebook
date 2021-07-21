@@ -1,36 +1,45 @@
+import axios from 'axios';
 import {
-  addContactError,
   addContactRequest,
   addContactSuccess,
-  deleteContactError,
-  deleteContactSuccess,
+  addContactError,
   deleteContactRequest,
-  getContactError,
-  getContactRequest,
-  getContactSuccess,
+  deleteContactSuccess,
+  deleteContactError,
+  fetchContactRequest,
+  fetchContactSuccess,
+  fetchContactError,
 } from './phonebook-actions';
-import axios from 'axios';
-axios.defaults.baseURL = 'http://localhost:4040/';
-export const addContact = contact => dispatch => {
+
+axios.defaults.baseURL = 'http://localhost:4040';
+// ---------------------------async-await-------------------------
+export const fetchContacts = () => async dispatch => {
+  dispatch(fetchContactRequest());
+  try {
+    const { data } = await axios.get('/contacts');
+    dispatch(fetchContactSuccess(data));
+  } catch (error) {
+    dispatch(fetchContactError(error));
+  }
+};
+
+export const addContact = (name, number) => dispatch => {
+  const contact = {
+    name,
+    number,
+  };
   dispatch(addContactRequest());
   axios
-    .post('contacts', contact)
-    .then(response => dispatch(addContactSuccess(response.data)))
+    .post('/contacts', contact)
+    .then(({ data }) => dispatch(addContactSuccess(data)))
     .catch(error => dispatch(addContactError(error)));
 };
 
 export const deleteContact = id => dispatch => {
   dispatch(deleteContactRequest());
+
   axios
-    .delete('contacts/' + id)
+    .delete(`/contacts/${id}`)
     .then(() => dispatch(deleteContactSuccess(id)))
     .catch(error => dispatch(deleteContactError(error)));
-};
-
-export const contactFetch = () => dispatch => {
-  dispatch(getContactRequest());
-  axios
-    .get('contacts')
-    .then(response => dispatch(getContactSuccess(response.data)))
-    .catch(error => dispatch(getContactError(error)));
 };

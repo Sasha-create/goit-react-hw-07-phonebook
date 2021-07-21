@@ -1,26 +1,20 @@
+// import { v4 as uuidv4 } from 'uuid';
 import { createAction } from '@reduxjs/toolkit';
-// import shortid from 'shortid';
 
-// export const addContact = createAction('phonebook/addContact', contact => ({
-//   payload: { ...contact, id: shortid.generate() },
-// }));
+export const fetchContactRequest = createAction('contacts/fetchContactRequest');
+export const fetchContactSuccess = createAction('contacts/fetchContactSuccess');
+export const fetchContactError = createAction('contacts/fetchContactError');
 
-// export const deleteContact = createAction('phonebook/deleteContact');
-
-export const addContactRequest = createAction('phonebook/addContactRequest');
-export const addContactSuccess = createAction('phonebook/addContactSuccess');
-export const addContactError = createAction('phonebook/addContactError');
+export const addContactRequest = createAction('contacts/addContactRequest');
+export const addContactSuccess = createAction('contacts/addContactSuccess');
+export const addContactError = createAction('contacts/addContactError');
 
 export const deleteContactRequest = createAction(
-  'phonebook/deleteContactRequest',
+  'contacts/deleteContactRequest',
 );
 export const deleteContactSuccess = createAction(
-  'phonebook/deleteContactSuccess',
+  'contacts/deleteContactSuccess',
 );
-export const deleteContactError = createAction('phonebook/deleteContactError');
+export const deleteContactError = createAction('contacts/deleteContactError');
 
-export const getContactRequest = createAction('phonebook/getContactRequest');
-export const getContactSuccess = createAction('phonebook/getContactSuccess');
-export const getContactError = createAction('phonebook/getContactError');
-
-export const filterContact = createAction('phonebook/filterContact');
+export const changeFilter = createAction('contacts/changeFilter');
