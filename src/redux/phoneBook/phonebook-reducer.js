@@ -14,16 +14,21 @@ import {
 
 const items = createReducer([], {
   [fetchContactSuccess]: (_, { payload }) => payload,
-  // [addContactSuccess]: (state, { payload }) => [...state, payload],
-  [addContactSuccess]: (state, { payload }) => {
-    if (state.map(contact => contact.name).includes(payload.name)) {
-      return alert(`${payload.name} is already exist`);
-    }
-    return [...state, payload];
-  },
+  [addContactSuccess]: (state, { payload }) => [...state, payload],
   [deleteContactSuccess]: (state, { payload }) =>
     state.filter(({ id }) => id !== payload),
 });
+// const items = createReducer([], {
+//   [fetchContactSuccess]: (_, { payload }) => payload,
+//   [addContactSuccess]: (state, { payload }) => {
+//     if (state.map(contact => contact.name).includes(payload.name)) {
+//       return alert(`${payload.name} is already exist`);
+//     }
+//     return [...state, payload];
+//   },
+//   [deleteContactSuccess]: (state, { payload }) =>
+//     state.filter(({ id }) => id !== payload),
+// });
 
 const loading = createReducer(false, {
   [fetchContactRequest]: () => true,

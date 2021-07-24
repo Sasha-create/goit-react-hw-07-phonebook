@@ -2,20 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { addContact } from '../../redux/phonebook/phonebook-operations';
 import { v4 as uuidv4 } from 'uuid';
-import PropTypes from 'prop-types';
 import styles from './ContactForm.module.css';
 
 class ContactForm extends Component {
-  static defaultProps = {
-    name: '',
-    number: '',
-  };
-
-  static propTypes = {
-    name: PropTypes.string,
-    number: PropTypes.string,
-  };
-
   state = {
     name: '',
     number: '',
